@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  namespace: dingxin
+  name: dingxin-portal 
+spec:
+  rules:
+  - host: portal
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: ui
+          servicePort: 80
+      - path: /v2
+        backend:
+          serviceName: registry
+          servicePort: repo
+      - path: /service
+        backend:
+          serviceName: ui
+          servicePort: 80
+

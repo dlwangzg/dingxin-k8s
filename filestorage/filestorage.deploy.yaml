@@ -1,0 +1,46 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  namespace: dingxin
+  name: dingxin-filestorage
+  labels:
+    name: dingxin-filestorage
+spec:
+  selector:
+    matchLabels:
+      app: dingxin-filestorage
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: dingxin-filestorage
+    spec:
+      containers:
+      - name: filestorage
+        image: harbor-ui:30814/dingchat/dx-filestorage:3.0.0 
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8090 
+        env:
+        - name: DB_HOST
+          valueFrom: 
+             configMapKeyRef: 
+               name: filestorage-cm
+               key: DB_HOST
+        - name: INTERNAL_IP 
+          valueFrom:
+             fieldRef:
+              fieldPath: status.podIP
+        volumeMounts:
+        - name: filestorage-log 
+          mountPath: /var/log/dingxin
+        - name: filestorage-data
+          mountPath: /app/data
+      volumes:
+      - name: filestorage-log
+        persistentVolumeClaim:
+          claimName: filestorage-log-pvc 
+      - name: filestorage-data
+        persistentVolumeClaim:
+          claimName: filestorage-data-pvc

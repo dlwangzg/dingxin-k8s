@@ -1,0 +1,52 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  namespace: dingxin
+  name: dingxin-uap
+  labels:
+    name: dingxin-uap
+spec:
+  selector:
+    matchLabels:
+      app: dingxin-uap
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: dingxin-uap
+    spec:
+      containers:
+      - name: uap
+        image: harbor-ui:30814/dingchat/dx-uap:3.0.0 
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 9000
+        env:
+        - name: DB_HOST
+          valueFrom: 
+             configMapKeyRef: 
+               name: uap-cm
+               key: DB_HOST
+        - name: DDL_AUTO
+          valueFrom:
+             configMapKeyRef: 
+               name: uap-cm
+               key: DDL_AUTO
+        - name: CLUSTER_SITE
+          valueFrom:
+             configMapKeyRef:
+               name: uap-cm
+               key: CLUSTER_SITE
+        - name: JODIS_CACHE_ZK
+          valueFrom:
+             configMapKeyRef:
+               name: uap-cm
+               key: JODIS_CACHE_ZK
+        volumeMounts:
+        - name: uap-log 
+          mountPath: /var/log/dingxin
+      volumes:
+      - name: uap-log
+        persistentVolumeClaim:
+          claimName: uap-log-pvc 

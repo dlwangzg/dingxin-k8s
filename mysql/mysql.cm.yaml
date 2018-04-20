@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dingxin-mysql-config
+  namespace: dingxin
+data:
+  MYSQL_ROOT_PASSWORD: "leadingMysql@2016"

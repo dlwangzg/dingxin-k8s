@@ -1,0 +1,32 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  namespace: dingxin
+  name: dingxin-redis
+  labels:
+    name: dingxin-redis
+spec:
+  selector:
+    matchLabels:
+      app: dingxin-redis-app
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: dingxin-redis-app
+    spec:
+      containers:
+      - name: dingxin-redis
+        image: harbor-ui:30814/dingchat/alpine-redis:v3.2 
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 6397 
+        volumeMounts:
+        - name: dingxin-redis-storage
+          mountPath: /data
+      volumes:
+      - name: dingxin-redis-storage
+        persistentVolumeClaim:
+          claimName: dingxin-redis-pvc 
+

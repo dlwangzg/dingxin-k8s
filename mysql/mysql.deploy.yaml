@@ -1,0 +1,38 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  namespace: dingxin
+  name: dingxin-mysql
+  labels:
+    name: dingxin-mysql
+spec:
+  selector:
+    matchLabels:
+      app: dingxin-mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: dingxin-mysql
+    spec:
+      containers:
+      - name: dingxin-mysql
+        image: harbor-ui:30814/dingchat/mysql:v5.5 
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3306
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom: 
+              configMapKeyRef: 
+               name: dingxin-mysql-config
+               key: MYSQL_ROOT_PASSWORD
+        volumeMounts:
+        - name: dingxin-mysql-storage
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: dingxin-mysql-storage
+        persistentVolumeClaim:
+          claimName: dingxin-mysql-pvc 
+

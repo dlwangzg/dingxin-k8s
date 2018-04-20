@@ -1,0 +1,32 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  namespace: dingxin
+  name: dingxin-registry
+  labels:
+    name: dingxin-registry
+spec:
+  selector:
+    matchLabels:
+      app: dingxin-registry
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: dingxin-registry
+    spec:
+      containers:
+      - name: registry
+        image: harbor-ui:30814/dingchat/dx-registry:3.0.0 
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8761
+        volumeMounts:
+        - name: registry-log 
+          mountPath: /var/log/dingxin
+      volumes:
+      - name: registry-log
+        persistentVolumeClaim:
+          claimName: registry-log-pvc 
+

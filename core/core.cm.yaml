@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: core-cm 
+  namespace: dingxin
+data:
+  DB_HOST: "dingxin-mysql"
+  DDL_AUTO: "update"
+  JODIS_CACHE_ZK: "zk-cs:2181"

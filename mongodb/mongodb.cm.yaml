@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dingxin-mongodb-config
+  namespace: dingxin
+data:
+  AUTH: "no"

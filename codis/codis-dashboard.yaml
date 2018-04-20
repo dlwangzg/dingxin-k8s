@@ -1,0 +1,36 @@
+apiVersion: "apps/v1"
+kind: StatefulSet
+metadata:
+  namespace: dingxin
+  name: codis-dashboard
+spec:
+  selector:
+    matchLabels:
+      app: codis-dashboard 
+  replicas: 1
+  serviceName: codis-dashboard
+  template:
+    metadata:
+      labels:
+        app: codis-dashboard
+    spec:
+      containers:
+      - name: codis-dashboard
+        image: harbor-ui:30814/dingchat/dx-codis-dashboard:3.1.0 
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: COORDINATOR_NAME 
+          value: "zookeeper"
+        - name: COORDINATOR_ADDR 
+          value: "zk-cs:2181"
+        - name: PRODUCT_NAME 
+          value: "codis-dingxin"
+        - name: PODIP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        #- name: PRODUCT_AUTH
+        #  value: ""
+        ports:
+        - containerPort: 18080
+          name: dashboard

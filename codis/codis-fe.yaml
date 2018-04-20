@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  namespace: dingxin
+  name: codis-fe
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: codis-fe
+    spec:
+      containers:
+      - name: codis-fe
+        image: harbor-ui:30814/dingchat/dx-codis-fe:3.1.0 
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: COORDINATOR_NAME 
+          value: "zookeeper"
+        - name: COORDINATOR_ADDR
+          value: "zk-cs:2181"
+        - name: PODIP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        ports:
+        - containerPort: 8080 
+          name: fe
+#        resources:
+#          limits:
+#            cpu: "2"
+#            memory: 2Gi
+#          requests:
+#            cpu: "0.1"
+#            memory: 0.1Gi

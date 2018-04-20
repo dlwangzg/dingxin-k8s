@@ -1,0 +1,38 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  namespace: dingxin
+  name: dingxin-mongodb
+  labels:
+    name: dingxin-mongodb
+spec:
+  selector:
+    matchLabels:
+      app: dingxin-mongodb-app
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: dingxin-mongodb-app
+    spec:
+      containers:
+      - name: dingxin-mongodb
+        image: harbor-ui:30814/dingchat/mongodb:v3.6 
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 27017 
+        env:
+          - name: AUTH
+            valueFrom: 
+              configMapKeyRef: 
+               name: dingxin-mongodb-config
+               key: AUTH
+        volumeMounts:
+        - name: dingxin-mongodb-storage
+          mountPath: /data/db
+      volumes:
+      - name: dingxin-mongodb-storage
+        persistentVolumeClaim:
+          claimName: dingxin-mongodb-pvc 
+

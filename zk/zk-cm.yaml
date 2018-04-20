@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dingxin-zk0-config
+  namespace: dingxin
+data:
+  ZOO_MY_ID: "0"
+  ZOO_SERVERS: "server.0=0.0.0.0:2888:3888 server.1=zk-1:2888:3888 server.2=zk-2:2888:3888"
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dingxin-zk1-config
+  namespace: dingxin
+data:
+  ZOO_MY_ID: "1"
+  ZOO_SERVERS: "server.0=zk-0:2888:3888 server.1=0.0.0.0:2888:3888 server.2=zk-2:2888:3888"
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dingxin-zk2-config
+  namespace: dingxin
+data:
+  ZOO_MY_ID: "2"
+  ZOO_SERVERS: "server.0=zk-0:2888:3888 server.1=zk-1:2888:3888 server.2=0.0.0.0:2888:3888"

@@ -1,0 +1,31 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  namespace: dingxin
+  name: dingxin-portal
+  labels:
+    name: dingxin-portal
+spec:
+  selector:
+    matchLabels:
+      app: dingxin-portal
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: dingxin-portal
+    spec:
+      containers:
+      - name: portal
+        image: harbor-ui:30814/dingchat/dx-portal:3.0.0 
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080 
+        volumeMounts:
+        - name: portal-log 
+          mountPath: /var/log/dingxin
+      volumes:
+      - name: portal-log
+        persistentVolumeClaim:
+          claimName: portal-log-pvc 

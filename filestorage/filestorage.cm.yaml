@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: filestorage-cm 
+  namespace: dingxin
+data:
+  DB_HOST: "dingxin-mongodb"

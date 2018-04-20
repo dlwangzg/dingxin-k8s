@@ -1,0 +1,51 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  namespace: dingxin
+  name: dingxin-core
+  labels:
+    name: dingxin-core
+spec:
+  selector:
+    matchLabels:
+      app: dingxin-core
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: dingxin-core
+    spec:
+      containers:
+      - name: core
+        image: harbor-ui:30814/dingchat/dx-core:3.0.0 
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 9000
+        env:
+        - name: DB_HOST
+          valueFrom: 
+             configMapKeyRef: 
+               name: core-cm
+               key: DB_HOST
+        - name: DDL_AUTO
+          valueFrom:
+             configMapKeyRef: 
+               name: core-cm
+               key: DDL_AUTO
+        - name: POD_NAME 
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: JODIS_CACHE_ZK
+          valueFrom:
+             configMapKeyRef:
+               name: core-cm
+               key: JODIS_CACHE_ZK
+        volumeMounts:
+        - name: core-log 
+          mountPath: /var/log/dingxin
+      volumes:
+      - name: core-log
+        persistentVolumeClaim:
+          claimName: core-log-pvc 

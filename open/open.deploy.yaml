@@ -1,0 +1,52 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  namespace: dingxin
+  name: dingxin-open
+  labels:
+    name: dingxin-open
+spec:
+  selector:
+    matchLabels:
+      app: dingxin-open
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: dingxin-open
+    spec:
+      containers:
+      - name: open
+        image: harbor-ui:30814/dingchat/dx-open:3.0.0 
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 9003
+        env:
+        - name: DB_HOST
+          valueFrom: 
+             configMapKeyRef: 
+               name: open-cm
+               key: DB_HOST
+        - name: DDL_AUTO
+          valueFrom:
+             configMapKeyRef: 
+               name: open-cm
+               key: DDL_AUTO
+        - name: CLUSTER_SITE
+          valueFrom:
+             configMapKeyRef:
+               name: open-cm
+               key: CLUSTER_SITE
+        - name: JODIS_CACHE_ZK
+          valueFrom:
+             configMapKeyRef:
+               name: open-cm
+               key: JODIS_CACHE_ZK
+        volumeMounts:
+        - name: open-log 
+          mountPath: /var/log/dingxin
+      volumes:
+      - name: open-log
+        persistentVolumeClaim:
+          claimName: open-log-pvc 
