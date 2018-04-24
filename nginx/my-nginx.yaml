@@ -1,0 +1,27 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: my-nginx
+  namespace: dingxin
+spec:
+  selector:
+    matchLabels:
+      app: dingxin-nginx 
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: dingxin-nginx
+    spec:
+      containers:
+      - name: my-nginx
+        image: nginx:1.7.9
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: nginx-web
+          mountPath: /opt
+      volumes:
+      - name: nginx-web 
+        persistentVolumeClaim:
+          claimName: dingxin-nginx-pvc 
